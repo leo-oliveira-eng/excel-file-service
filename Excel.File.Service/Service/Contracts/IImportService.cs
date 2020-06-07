@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Excel.File.Service.Service.Contracts
 {
-    interface IImportService
+    public interface IImportService
     {
+        Task<List<T>> ReadAsync<T>(string base64File) where T : class, new();
     }
 }
