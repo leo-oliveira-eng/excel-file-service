@@ -1,5 +1,6 @@
 ﻿using Excel.File.Service.Service.Contracts;
 using ExcelDataReader;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,7 +21,23 @@ namespace Excel.File.Service.Service
             var memoryStream = new MemoryStream(buffer, 0, buffer.Length);
 
             return await GenerateImportAsync<T>(memoryStream);
-        }        
+        }
+
+        public async Task<List<T>> ReadAsync<T>(IFormFile file) where T : class, new()
+        {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            var stream = file.OpenReadStream();
+
+            return await GenerateImportAsync<T>(stream);
+        }
+
+        public async Task<List<T>> ReadAsync<T>(Stream file) where T : class, new()
+        {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            return await GenerateImportAsync<T>(file);
+        }
 
         async Task<List<T>> GenerateImportAsync<T>(Stream fileStream) where T : class, new()
         {
