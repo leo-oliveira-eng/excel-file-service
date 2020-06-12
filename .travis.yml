@@ -1,0 +1,9 @@
+version: "{build}"
+language: csharp
+image: Visual Studio 2019
+solution: excel-file-service.sln
+branches:
+  only:
+    - master
+test: off #tests handled by cake script
+deploy: off #deploy handled by cake script

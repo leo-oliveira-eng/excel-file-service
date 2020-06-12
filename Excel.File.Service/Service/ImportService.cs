@@ -13,6 +13,9 @@ namespace Excel.File.Service.Service
     internal class ImportService : IImportService
     {
         public async Task<List<T>> ReadAsync<T>(string base64File) where T : class, new()
+            => await ReadAsync<T>(base64File, default);
+
+        public async Task<List<T>> ReadAsync<T>(string base64File, int sheetIndex) where T : class, new()
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -20,39 +23,39 @@ namespace Excel.File.Service.Service
 
             var memoryStream = new MemoryStream(buffer, 0, buffer.Length);
 
-            return await GenerateImportAsync<T>(memoryStream);
+            return await ReadAsync<T>(memoryStream, sheetIndex);
         }
 
         public async Task<List<T>> ReadAsync<T>(IFormFile file) where T : class, new()
-        {
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            => await ReadAsync<T>(file, default);
 
+        public async Task<List<T>> ReadAsync<T>(IFormFile file, int sheetIndex) where T : class, new()
+        {
             var stream = file.OpenReadStream();
 
-            return await GenerateImportAsync<T>(stream);
+            return await ReadAsync<T>(stream, sheetIndex);
         }
 
         public async Task<List<T>> ReadAsync<T>(Stream file) where T : class, new()
-        {
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            => await ReadAsync<T>(file, default);
 
-            return await GenerateImportAsync<T>(file);
-        }
+        public async Task<List<T>> ReadAsync<T>(Stream file, int sheetIndex) where T : class, new()
+            => await GenerateImportAsync<T>(file, sheetIndex);
 
-        async Task<List<T>> GenerateImportAsync<T>(Stream fileStream) where T : class, new()
+        async Task<List<T>> GenerateImportAsync<T>(Stream fileStream, int sheetIndex = 0) where T : class, new()
         {
-            var dataTable = GenerateDataTable(fileStream);
+            var dataTable = GenerateDataTable(fileStream, sheetIndex);
 
             return await GenerateRegistersAsync<T>(dataTable);
         }
 
-        DataTable GenerateDataTable(Stream stream)
+        DataTable GenerateDataTable(Stream stream, int sheetIndex = 0)
         {
             IExcelDataReader data = ExcelReaderFactory.CreateReader(stream);
 
             ExcelDataSetConfiguration conf = GetConfiguration();
 
-            return data.AsDataSet(conf).Tables[0];
+            return data.AsDataSet(conf).Tables[sheetIndex];
         }
 
         ExcelDataSetConfiguration GetConfiguration()

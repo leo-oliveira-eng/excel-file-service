@@ -9,8 +9,14 @@ namespace Excel.File.Service.Service.Contracts
     {
         Task<List<T>> ReadAsync<T>(string base64File) where T : class, new();
 
+        Task<List<T>> ReadAsync<T>(string base64File, int sheetIndex) where T : class, new();
+
         Task<List<T>> ReadAsync<T>(IFormFile file) where T : class, new();
 
+        Task<List<T>> ReadAsync<T>(IFormFile file, int sheetIndex) where T : class, new();
+
         Task<List<T>> ReadAsync<T>(Stream file) where T : class, new();
+
+        Task<List<T>> ReadAsync<T>(Stream file, int sheetIndex) where T : class, new();
     }
 }
