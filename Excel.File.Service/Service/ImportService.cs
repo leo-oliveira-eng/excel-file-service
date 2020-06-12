@@ -12,10 +12,10 @@ namespace Excel.File.Service.Service
 {
     internal class ImportService : IImportService
     {
-        public async Task<List<T>> ReadAsync<T>(string base64File) where T : class, new()
-            => await ReadAsync<T>(base64File, default);
+        public async Task<List<T>> ReadAsync<T>(string base64File, bool? useHeaderRow) where T : class, new()
+            => await ReadAsync<T>(base64File, default, useHeaderRow);
 
-        public async Task<List<T>> ReadAsync<T>(string base64File, int sheetIndex) where T : class, new()
+        public async Task<List<T>> ReadAsync<T>(string base64File, int sheetIndex, bool? useHeaderRow) where T : class, new()
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -23,47 +23,47 @@ namespace Excel.File.Service.Service
 
             var memoryStream = new MemoryStream(buffer, 0, buffer.Length);
 
-            return await ReadAsync<T>(memoryStream, sheetIndex);
+            return await ReadAsync<T>(memoryStream, sheetIndex, useHeaderRow);
         }
 
-        public async Task<List<T>> ReadAsync<T>(IFormFile file) where T : class, new()
-            => await ReadAsync<T>(file, default);
+        public async Task<List<T>> ReadAsync<T>(IFormFile file, bool? useHeaderRow) where T : class, new()
+            => await ReadAsync<T>(file, default, useHeaderRow);
 
-        public async Task<List<T>> ReadAsync<T>(IFormFile file, int sheetIndex) where T : class, new()
+        public async Task<List<T>> ReadAsync<T>(IFormFile file, int sheetIndex, bool? useHeaderRow) where T : class, new()
         {
             var stream = file.OpenReadStream();
 
-            return await ReadAsync<T>(stream, sheetIndex);
+            return await ReadAsync<T>(stream, sheetIndex, useHeaderRow);
         }
 
-        public async Task<List<T>> ReadAsync<T>(Stream file) where T : class, new()
-            => await ReadAsync<T>(file, default);
+        public async Task<List<T>> ReadAsync<T>(Stream file, bool? useHeaderRow) where T : class, new()
+            => await ReadAsync<T>(file, default, useHeaderRow);
 
-        public async Task<List<T>> ReadAsync<T>(Stream file, int sheetIndex) where T : class, new()
-            => await GenerateImportAsync<T>(file, sheetIndex);
+        public async Task<List<T>> ReadAsync<T>(Stream file, int sheetIndex, bool? useHeaderRow) where T : class, new()
+            => await GenerateImportAsync<T>(file, sheetIndex, useHeaderRow);
 
-        async Task<List<T>> GenerateImportAsync<T>(Stream fileStream, int sheetIndex = 0) where T : class, new()
+        async Task<List<T>> GenerateImportAsync<T>(Stream fileStream, int sheetIndex, bool? useHeaderRow) where T : class, new()
         {
-            var dataTable = GenerateDataTable(fileStream, sheetIndex);
+            var dataTable = GenerateDataTable(fileStream, sheetIndex, useHeaderRow);
 
             return await GenerateRegistersAsync<T>(dataTable);
         }
 
-        DataTable GenerateDataTable(Stream stream, int sheetIndex = 0)
+        DataTable GenerateDataTable(Stream stream, int sheetIndex, bool? useHeaderRow = true)
         {
             IExcelDataReader data = ExcelReaderFactory.CreateReader(stream);
 
-            ExcelDataSetConfiguration conf = GetConfiguration();
+            ExcelDataSetConfiguration conf = GetConfiguration(useHeaderRow.Value);
 
             return data.AsDataSet(conf).Tables[sheetIndex];
         }
 
-        ExcelDataSetConfiguration GetConfiguration()
+        ExcelDataSetConfiguration GetConfiguration(bool useHeaderRow)
             => new ExcelDataSetConfiguration
             {
                 ConfigureDataTable = _ => new ExcelDataTableConfiguration
                 {
-                    UseHeaderRow = true
+                    UseHeaderRow = useHeaderRow
                 }
             };
 

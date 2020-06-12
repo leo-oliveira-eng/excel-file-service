@@ -1,10 +1,9 @@
-# excel-file-service
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fleo-oliveira-eng%2Fexcel-file-service.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fleo-oliveira-eng%2Fexcel-file-service?ref=badge_shield)
+# excel-file-service [![Build Status](https://travis-ci.com/leo-oliveira-eng/excel-file-service.svg?branch=master)](https://travis-ci.com/leo-oliveira-eng/excel-file-service) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fleo-oliveira-eng%2Fexcel-file-service.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fleo-oliveira-eng%2Fexcel-file-service?ref=badge_shield)
 
 Package that makes easy to import and export data from Excel spreadsheets 
 
 Planning:
+--------
 => #0 Create repository
 
 => #1 Project structure

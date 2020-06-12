@@ -1,9 +1,10 @@
-version: "{build}"
+version: 1.0.0-pre-0
 language: csharp
-image: Visual Studio 2019
 solution: excel-file-service.sln
 branches:
   only:
     - master
-test: off #tests handled by cake script
-deploy: off #deploy handled by cake script
+mono: none
+script:
+ - dotnet restore
+ - dotnet build
