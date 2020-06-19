@@ -14,9 +14,9 @@ Planning:
 
 => #4 Overloads for the read method
 
-... #5 Overload for choosing the spreadsheet index to be read
+=> #5 Overload for choosing the spreadsheet index to be read
 
-... #6 Return any primary type
+=> #6 Return any primitive type
 
 ... #7 Structure for exporting files
 
