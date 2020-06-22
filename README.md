@@ -18,9 +18,9 @@ Planning:
 
 => #6 Return any primitive type
 
-... #7 Structure for exporting files
+=> #7 Structure for exporting files
 
-... #8 Export Txt file with delimiter
+=> #8 Export Txt file with delimiter
 
 ... #9 export file in Csv
 

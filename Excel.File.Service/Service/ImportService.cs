@@ -96,9 +96,9 @@ namespace Excel.File.Service.Service
                     {
                         var property = register.GetType().GetProperties()[column].Name;
 
-                        string dataValue = dataTable.Rows[row][column].ToString();
+                        var dataValue = dataTable.Rows[row][column].ToString();
 
-                        Type propertyType = register.GetType().GetProperties()[column].PropertyType;
+                        var propertyType = register.GetType().GetProperties()[column].PropertyType;
 
                         if (!TypeDescriptor.GetConverter(propertyType).IsValid(dataValue))
                             throw new InvalidOperationException($"The conversion of the cell column {column}, row {row} is impossible or not supported.");
