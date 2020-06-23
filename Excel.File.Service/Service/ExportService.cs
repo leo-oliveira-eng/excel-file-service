@@ -14,11 +14,19 @@ namespace Excel.File.Service.Service
         public async Task<string> ExportToBase64TxtAsync<T>(List<T> registers, string delimiter = ";") where T : class
         {
             if (registers == null)
-                throw new ArgumentNullException(nameof(registers), $"{nameof(registers)} is not invalid");
+                throw new ArgumentNullException(nameof(registers), $"{nameof(registers)} is invalid");
 
             byte[] file = await GenerateFile(registers, delimiter);
 
             return Convert.ToBase64String(file);
+        }
+
+        public async Task<MemoryStream> ExportToMemoryStreamTxtAsync<T>(List<T> registers, string delimiter = ";") where T : class
+        {
+            if (registers == null)
+                throw new ArgumentNullException(nameof(registers), $"{nameof(registers)} is invalid");
+
+            return await GenerateMemoryStream(registers, delimiter);
         }
 
         async Task<byte[]> GenerateFile<T>(List<T> registers, string delimiter) where T : class
@@ -44,6 +52,31 @@ namespace Excel.File.Service.Service
             System.IO.File.Delete(path);
 
             return (file);
+        }
+
+        async Task<MemoryStream> GenerateMemoryStream<T>(List<T> registers, string delimiter) where T : class
+        {
+            string path = $"{Path.GetTempPath()}TemporaryFile.txt";
+
+            if (System.IO.File.Exists(path))
+                System.IO.File.Delete(path);
+
+            FileStream fs = System.IO.File.OpenWrite(path);
+
+            foreach (var register in registers)
+                await WriteLine(register, fs, delimiter);
+
+            fs.Close();
+
+            fs = System.IO.File.OpenRead(path);
+
+            var memoryStream = new MemoryStream();
+
+            fs.CopyTo(memoryStream);
+
+            fs.Close();
+
+            return memoryStream;
         }
 
         async Task WriteLine<T>(T register, FileStream fs, string delimiter) where T : class

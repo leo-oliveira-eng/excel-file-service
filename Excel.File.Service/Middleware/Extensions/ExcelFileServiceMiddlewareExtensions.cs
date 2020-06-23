@@ -8,6 +8,7 @@ namespace Excel.File.Service.Middleware.Extensions
     {
         public static IServiceCollection AddExcelReader(this IServiceCollection services)
         {
+            services.AddTransient<IExportService, ExportService>();
             return services.AddTransient<IImportService, ImportService>();
         }
     }
