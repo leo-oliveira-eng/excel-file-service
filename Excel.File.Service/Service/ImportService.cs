@@ -14,6 +14,8 @@ namespace Excel.File.Service.Service
 {
     internal class ImportService : IImportService
     {
+        static bool _useHeaderRow;
+
         public ImportService() { Encoding.RegisterProvider(CodePagesEncodingProvider.Instance); }
 
         public async Task<List<T>> ReadAsync<T>(string base64File, bool? useHeaderRow = null) where T : class, new()
@@ -42,30 +44,34 @@ namespace Excel.File.Service.Service
             => await ReadAsync<T>(file, default, useHeaderRow);
 
         public async Task<List<T>> ReadAsync<T>(Stream file, int sheetIndex, bool? useHeaderRow = null) where T : class, new()
-            => await GenerateImportAsync<T>(file, sheetIndex, useHeaderRow);
-
-        async Task<List<T>> GenerateImportAsync<T>(Stream fileStream, int sheetIndex, bool? useHeaderRow = null) where T : class, new()
         {
-            var dataTable = GenerateDataTable(fileStream, sheetIndex, useHeaderRow);
+            _useHeaderRow = useHeaderRow ?? true;
+
+            return await GenerateImportAsync<T>(file, sheetIndex);
+        }
+
+        async Task<List<T>> GenerateImportAsync<T>(Stream fileStream, int sheetIndex) where T : class, new()
+        {
+            var dataTable = GenerateDataTable(fileStream, sheetIndex);
 
             return await GenerateRegistersAsync<T>(dataTable);
         }
 
-        DataTable GenerateDataTable(Stream stream, int sheetIndex, bool? useHeaderRow = null)
+        DataTable GenerateDataTable(Stream stream, int sheetIndex)
         {
             IExcelDataReader data = ExcelReaderFactory.CreateReader(stream);
 
-            ExcelDataSetConfiguration conf = GetConfiguration(useHeaderRow);
+            ExcelDataSetConfiguration conf = GetConfiguration();
 
             return data.AsDataSet(conf).Tables[sheetIndex];
         }
 
-        ExcelDataSetConfiguration GetConfiguration(bool? useHeaderRow = null)
+        ExcelDataSetConfiguration GetConfiguration()
             => new ExcelDataSetConfiguration
             {
                 ConfigureDataTable = _ => new ExcelDataTableConfiguration
                 {
-                    UseHeaderRow = useHeaderRow ?? true
+                    UseHeaderRow = _useHeaderRow
                 }
             };
 
@@ -94,14 +100,14 @@ namespace Excel.File.Service.Service
 
                     for (int column = 0; column < dataTable.Columns.Count; column++)
                     {
-                        var property = register.GetType().GetProperties()[column].Name;
+                        string property = register.GetType().GetProperties()[column].Name;
 
                         var dataValue = dataTable.Rows[row][column].ToString();
 
                         var propertyType = register.GetType().GetProperties()[column].PropertyType;
 
                         if (!TypeDescriptor.GetConverter(propertyType).IsValid(dataValue))
-                            throw new InvalidOperationException($"The conversion of the cell column {column}, row {row} is impossible or not supported.");
+                            throw new InvalidOperationException($"The conversion of the cell {column.ToLetterRepresentation()}{(_useHeaderRow ? row + 2 : row++)} to the type {propertyType.Name} is impossible or not supported.");
 
                         var parsedValue = dataValue.Parse(propertyType);
 

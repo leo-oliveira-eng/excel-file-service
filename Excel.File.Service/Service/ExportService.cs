@@ -31,7 +31,7 @@ namespace Excel.File.Service.Service
 
         async Task<byte[]> GenerateFile<T>(List<T> registers, string delimiter) where T : class
         {
-            string path = $"{Path.GetTempPath()}TemporaryFile.txt";
+            string path = $"{Path.GetTempPath()}ExportServiceTemporaryFile.txt";
 
             if (System.IO.File.Exists(path))
                 System.IO.File.Delete(path);
@@ -56,7 +56,7 @@ namespace Excel.File.Service.Service
 
         async Task<MemoryStream> GenerateMemoryStream<T>(List<T> registers, string delimiter) where T : class
         {
-            string path = $"{Path.GetTempPath()}TemporaryFile.txt";
+            string path = $"{Path.GetTempPath()}ExportServiceTemporaryFile.txt";
 
             if (System.IO.File.Exists(path))
                 System.IO.File.Delete(path);
