@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Excel.File.Service</PackageId>
-	<Version>1.0.0-preview-1</Version>
+	<Version>1.0.0-preview-2</Version>
 	<PackageLicenseFile>License.txt</PackageLicenseFile>
 	<Authors>Leonardo de Oliveira (leo.oliveira.eng@outlook.com)</Authors>
 	<Description>A preview version of a package to simplify import and export basic ordinary spreadsheets for .NET core</Description>
@@ -12,11 +12,12 @@
 	<RepositoryType>git</RepositoryType>
 	<NeutralLanguage />
 	<PackageTags>Excel txt Import Export</PackageTags>
-	<PackageIconUrl>https://drive.google.com/file/d/1gdTrhFRpd71AaQAuFSWEJSVG2y3LpUw5/view?usp=sharing</PackageIconUrl>
+	<PackageIcon>FileService.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="License.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
+	<None Include="FileService.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>

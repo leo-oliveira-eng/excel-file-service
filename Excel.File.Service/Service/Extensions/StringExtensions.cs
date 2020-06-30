@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Excel.File.Service.Service.Extensions
 {
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         public static object Parse(this string value, Type type)
             => ParseMethod.MakeGenericMethod(type).Invoke(null, new object[] { value });

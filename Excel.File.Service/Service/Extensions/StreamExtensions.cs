@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Excel.File.Service.Service.Extensions
 {
-    public static class StreamExtensions
+    internal static class StreamExtensions
     {
         public static byte[] ToByteArray(this FileStream stream)
         {

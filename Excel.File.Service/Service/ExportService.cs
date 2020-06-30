@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Excel.File.Service.Service
 {
-    public class ExportService : IExportService
+    internal class ExportService : IExportService
     {
         public async Task<string> ExportToBase64TxtAsync<T>(List<T> registers, string delimiter = ";") where T : class
         {
