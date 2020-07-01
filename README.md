@@ -1,18 +1,18 @@
 # excel-file-service ![.NET Core](https://github.com/leo-oliveira-eng/excel-file-service/workflows/.NET%20Core/badge.svg)  [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md) [![NuGet](https://img.shields.io/nuget/vpre/Excel.File.Service)](https://www.nuget.org/packages/Excel.File.Service)
 
-Package that makes easier to import and export data from Excel spreadsheets for .Net Core applications. 
+Import and export data from Excel spreadsheets pain-free for .Net Core applications with this package.  
 
-After having to implement the import of spreadsheets in 3 different projects, I couldn't avoid creating a package to encapsulate these operations.
+After implementing the import of spreadsheets for 3 different projects, I couldn't help but to create a package that encapsulated those operations.
 
-This package uses [ExcelDataReader](https://github.com/ExcelDataReader/ExcelDataReader) as base, which is a lightweight and fast library for reading Microsoft Excel files. Presently, it is used for more than 3700 repositories on GitHub.
+This package uses [ExcelDataReader](https://github.com/ExcelDataReader/ExcelDataReader) as its base – a lightweight fast library for reading Excel files. Thus far, it is used by more than 3700 repositories on GitHub.
 
-The idea is removing from the developer the repetitive and monotonous process of reading the spreadsheet or the process of exporting.
+The idea is setting developers free from the hassle of repetitive tedious process of reading the spreadsheet or exporting them.
 
-Currently, a preview version has been published that already supports reading and importing files from Stream, IFormFile and base64. Today, the export only supports txt files in base64 and Stream format.
+Currently the published alpha version supports reading and importing files from Stream, IFormFile and base64. By now, the export only supports .txt files in base64 and Stream format.
 
-Still in development, the package also proposes to deliver exporting in csv, xls and xlsx in addition to supporting password protected files.
+With continuous improvement, the package will soon support the export in .csv, .xls and .xlsx files, in addition to support of password protected files.
 
-Suggestions are welcome.
+Your feedback is welcome! &#128522;
 
 ## Installation
 
@@ -68,7 +68,7 @@ Let's assume that we want to import the fictional sales spreadsheet below.
 | 1312         | USA         | 9873        | 1500.1                 |
 | 1313         | BRA         | 77658       | 135.6                  |
 
-The DTO class for this spreadsheet would be generated as below. It is important that the order of the columns be the same as the order of the properties of the class.
+The DTO class for this spreadsheet would be generated as below. It is important that the order of the columns is the same as the order of the properties of the class.
 
 ```csharp
 namespace Your.Namespace
@@ -123,6 +123,9 @@ namespace Any.Namespace
            List<SalesDto> sales = await ImportService.ReadAsync<SalesDto>(requestMessage);
            ....
         }
+
+        #endregion
+    }
 }
 ```
 
@@ -170,6 +173,9 @@ namespace Other.Namespace
            string sales = await ExportService.ExportToBase64TxtAsync(registers);
            ....
         }
+
+        #endregion
+    }
 }
 ```
 
