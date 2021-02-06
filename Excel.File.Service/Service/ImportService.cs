@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,6 +37,16 @@ namespace Excel.File.Service.Service
         public async Task<List<T>> ReadAsync<T>(IFormFile file, int sheetIndex, bool? useHeaderRow = null) where T : class, new()
         {
             var stream = file.OpenReadStream();
+
+            return await ReadAsync<T>(stream, sheetIndex, useHeaderRow);
+        }
+
+        public async Task<List<T>> ReadAsync<T>(Uri uri, bool? useHeaderRow = null) where T : class, new()
+            => await ReadAsync<T>(uri, default, useHeaderRow);
+
+        public async Task<List<T>> ReadAsync<T>(Uri uri, int sheetIndex, bool? useHeaderRow = null) where T : class, new()
+        {
+            var stream = await DownloadDocument(uri);
 
             return await ReadAsync<T>(stream, sheetIndex, useHeaderRow);
         }
@@ -122,6 +133,15 @@ namespace Excel.File.Service.Service
             });
 
             return registers;
+        }
+
+        async Task<Stream> DownloadDocument(Uri uri)
+        {
+            using (var client = new WebClient())
+            {
+                byte[] document = await client.DownloadDataTaskAsync(uri.AbsoluteUri);
+                return new MemoryStream(document);
+            }
         }
     }
 }

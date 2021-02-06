@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -18,5 +19,9 @@ namespace Excel.File.Service.Service.Contracts
         Task<List<T>> ReadAsync<T>(Stream file, bool? useHeaderRow) where T : class, new();
 
         Task<List<T>> ReadAsync<T>(Stream file, int sheetIndex, bool? useHeaderRow) where T : class, new();
+
+        Task<List<T>> ReadAsync<T>(Uri uri, bool? useHeaderRow = null) where T : class, new();
+
+        Task<List<T>> ReadAsync<T>(Uri uri, int sheetIndex, bool? useHeaderRow = null) where T : class, new();
     }
 }
